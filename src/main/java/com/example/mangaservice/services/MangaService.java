@@ -12,11 +12,11 @@ public class MangaService {
     }
     public Double getRating(String name)
     {
-        Double Rating = mangaRepository.getRatingForName(name);
-        if (Rating==null)
+        Double rating = mangaRepository.getRatingForName(name);
+        if (rating==null)
         {
             throw new IllegalArgumentException();
         }
-        return Rating;
+        return rating;
     }
 }
