@@ -1,16 +1,12 @@
 package com.example.mangaservice.repositories;
-
+import com.example.mangaservice.entities.Manga;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.List;
 @Repository
-public class MangaRepository {
-    private final Map<String, Double> storage = new HashMap<>(Map.of("OnePiece", 4.83));
 
-    public Double getRatingForName(String name)
-    {
-       return storage.get(name);
+
+    public interface MangaRepository extends JpaRepository<Manga,Long> {
+    List<Manga> findByName(String name);
     }
-}
+
