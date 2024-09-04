@@ -1,23 +1,33 @@
 package com.example.mangaservice.services;
+import com.example.mangaservice.cache.Cache;
 import com.example.mangaservice.exceptions.ListIsEmpty;
 import com.example.mangaservice.dto.MangaDTO;
 import com.example.mangaservice.entities.Manga;
 import com.example.mangaservice.repositories.MangaRepository;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.http.RequestEntity.post;
 
 @Service
 public class MangaService
 {
+
+    private Cache cache;
     private final MangaRepository mangaRepository;
-    public MangaService(MangaRepository mangaRepository)
+    public MangaService(MangaRepository mangaRepository,Cache cache)
     {
         this.mangaRepository=mangaRepository;
+        this.cache=cache;
     }
 
-    public List<MangaDTO> findAllBooks() {
+    public List<MangaDTO> findAllManga() {
 
         List<Manga> mangaList = mangaRepository.findAll();
         if (mangaList.isEmpty()) {
@@ -37,6 +47,9 @@ public class MangaService
         return mangaList.stream()
                 .map(manga -> new MangaDTO(manga.getId(),manga.getName(), manga.getRating(), manga.getAuthor()))
                 .toList();
+    }
+    public void saveMangas(List<MangaDTO> mangaDTOs) {
+        mangaDTOs.parallelStream().forEach(this::saveManga);
     }
     public void saveManga(MangaDTO mangaDTO) {
         Manga manga = new Manga();
@@ -78,4 +91,28 @@ public class MangaService
             throw  new EntityNotFoundException("Manga with ID [" + id + "] is not found.");
         }
     }
+    public List<MangaDTO> findMangaByRating(Double minRating)
+    {
+        String cacheKey="Manga with rating higher then" + minRating;
+        List<MangaDTO> cachedManga=(List<MangaDTO>) cache.get(cacheKey);
+        if(cachedManga!=null)
+        {
+            return cachedManga;
+        }
+        List<Manga> mangaList=mangaRepository.findMangaByRating(minRating);
+        if(mangaList.isEmpty())
+        {
+            throw new ListIsEmpty("List is empty");
+        }
+        List<MangaDTO> mangaDTOs=mangaList.stream()
+                .map(manga->new MangaDTO(manga.getId(),manga.getName(),manga.getRating(),manga.getAuthor()))
+                .toList();
+        cache.put(cacheKey,mangaDTOs);
+        return mangaDTOs;
+    }
+
+    public void bulkSaveManga(List<Manga> mangas) {
+        mangaRepository.saveAll(mangas);
+    }
+
 }

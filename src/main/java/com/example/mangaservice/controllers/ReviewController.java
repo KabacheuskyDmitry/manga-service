@@ -2,6 +2,7 @@ package com.example.mangaservice.controllers;
 
 
 
+import com.example.mangaservice.dto.MangaDTO;
 import com.example.mangaservice.dto.ReviewDTO;
 import com.example.mangaservice.services.ReviewService;
 import org.springframework.http.HttpStatus;
@@ -41,9 +42,4 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/UpdateReview/rating/{id}")
-    public ResponseEntity<String> updateReviewRating(@PathVariable Long id, @RequestBody int rating) {
-        reviewService.updateReviewRating(id);
-        return ResponseEntity.ok().build();
-    }
 }

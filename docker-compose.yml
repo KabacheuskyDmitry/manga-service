@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: DockerFile
+    environment:
+      #SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD:
+    ports:
+      - 8080:8080

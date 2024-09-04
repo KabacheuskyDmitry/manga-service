@@ -44,7 +44,7 @@ public class ReviewService {
     {
         Review review = new Review();
         review.setContent(content);
-        Manga manga = (Manga) mangaRepository.findByName(name);
+        Manga manga = mangaRepository.findByName(name);
         if(manga!=null) {
             review.setManga(manga);
         }
@@ -77,14 +77,4 @@ public class ReviewService {
         }
     }
 
-    public void updateReviewRating(Long id) {
-        Optional<Review> reviewOptional = reviewRepository.findById(id);
-
-        if (reviewOptional.isPresent()) {
-            Review review = reviewOptional.get();
-            reviewRepository.save(review);
-        } else {
-            throw new IllegalArgumentException("Review with ID [" + id + "] is not found.");
-        }
-    }
 }
