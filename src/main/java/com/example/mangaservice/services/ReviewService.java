@@ -1,7 +1,5 @@
 package com.example.mangaservice.services;
 
-
-import com.example.mangaservice.dto.MangaDTO;
 import com.example.mangaservice.dto.ReviewDTO;
 import com.example.mangaservice.entities.Manga;
 import com.example.mangaservice.entities.Review;
@@ -10,7 +8,6 @@ import com.example.mangaservice.repositories.MangaRepository;
 import com.example.mangaservice.repositories.ReviewRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 

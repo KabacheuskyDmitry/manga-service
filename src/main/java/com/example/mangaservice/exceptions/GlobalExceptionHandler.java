@@ -1,7 +1,5 @@
 package com.example.mangaservice.exceptions;
 
-import com.example.mangaservice.exceptions.Response;
-import com.example.mangaservice.exceptions.ListIsEmpty;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;

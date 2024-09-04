@@ -1,8 +1,5 @@
 package com.example.mangaservice.controllers;
 
-
-
-import com.example.mangaservice.dto.MangaDTO;
 import com.example.mangaservice.dto.ReviewDTO;
 import com.example.mangaservice.services.ReviewService;
 import org.springframework.http.HttpStatus;

@@ -4,17 +4,9 @@ import com.example.mangaservice.exceptions.ListIsEmpty;
 import com.example.mangaservice.dto.MangaDTO;
 import com.example.mangaservice.entities.Manga;
 import com.example.mangaservice.repositories.MangaRepository;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.http.RequestEntity.post;
-
 @Service
 public class MangaService
 {

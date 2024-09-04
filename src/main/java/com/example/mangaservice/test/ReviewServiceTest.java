@@ -1,13 +1,11 @@
 package com.example.mangaservice.test;
 
-import com.example.mangaservice.dto.ReviewDTO;
 import com.example.mangaservice.entities.Manga;
 import com.example.mangaservice.entities.Review;
 import com.example.mangaservice.exceptions.ListIsEmpty;
 import com.example.mangaservice.repositories.MangaRepository;
 import com.example.mangaservice.repositories.ReviewRepository;
 import com.example.mangaservice.services.ReviewService;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -2,22 +2,14 @@ package com.example.mangaservice.controllers;
 
 import com.example.mangaservice.components.RequestCounter;
 import com.example.mangaservice.dto.MangaDTO;
-import com.example.mangaservice.entities.Manga;
 import com.example.mangaservice.services.MangaService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.http.RequestEntity.post;
 @Tag(name = "Manga Controller", description = "Operations related to manga")
 @RestController
 public class MangaController {
