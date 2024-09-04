@@ -40,9 +40,13 @@ public class MangaServiceTest {
     }
     @Test
     public void testFindAllMangas() {
-        Manga Manga1 = MangaConstructor("Manga 1","Author 1",4.23,1L);
+        String name1 = "Manga 1";
+        String name2 = "Manga 2";
+        String author1 = "Author 1";
+        String author2 = "Author 2";
+        Manga Manga1 = MangaConstructor(name1,author1,4.23,1L);
 
-        Manga Manga2 = MangaConstructor("Manga 2","Author 2",4.03,2L);
+        Manga Manga2 = MangaConstructor(name2,author2,4.03,2L);
 
         List<Manga> Mangas = Arrays.asList(Manga1, Manga2);
 
@@ -52,12 +56,12 @@ public class MangaServiceTest {
 
         assertAll("Проверка всех книг",
                 () -> assertEquals(2, result.size(), "Размер списка должен быть 2"),
-                () -> assertEquals("Manga 1", result.get(0).getName(), "Заголовок первой манги должен быть 'Manga 1'"),
+                () -> assertEquals(name1, result.get(0).getName(), "Заголовок первой манги должен быть 'Manga 1'"),
                 () -> assertEquals(4.23, result.get(0).getRating(), "Рейтинг первой манги должен быть '4,23'"),
-                () -> assertEquals("Author 1", result.get(0).getAuthor(), "Автор первой манги должен быть 'Author 1'"),
-                () -> assertEquals("Manga 2", result.get(1).getName(), "Заголовок второй манги должен быть 'Manga 2'"),
+                () -> assertEquals(author1, result.get(0).getAuthor(), "Автор первой манги должен быть 'Author 1'"),
+                () -> assertEquals(name2, result.get(1).getName(), "Заголовок второй манги должен быть 'Manga 2'"),
                 () -> assertEquals(4.03, result.get(1).getRating(), "Рейтинг второй манги должен быть '4,03'"),
-                () -> assertEquals("Author 2", result.get(1).getAuthor(), "Автор второй манги должен быть 'Author 2'")
+                () -> assertEquals(author2, result.get(1).getAuthor(), "Автор второй манги должен быть 'Author 2'")
         );
     }
     @Test
