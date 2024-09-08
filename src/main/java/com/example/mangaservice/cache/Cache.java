@@ -7,18 +7,18 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.springframework.stereotype.Component;
 @Component
 public class Cache {
-    
-    private final Map<String, Object> caches = new ConcurrentHashMap<>();
+
+    private final Map<String, Object> myCache = new ConcurrentHashMap<>();
     private final ReentrantLock lock = new ReentrantLock();
     private static final int MAX_SIZE = 5;
     public void put(String key, Object value) {
         if (key != null) {
             lock.lock();
             try {
-                if (caches.size() >= MAX_SIZE) {
+                if (myCache.size() >= MAX_SIZE) {
                     removeLast();
                 }
-                caches.put(key, value);
+                myCache.put(key, value);
             } finally {
                 lock.unlock();
             }
@@ -29,19 +29,19 @@ public class Cache {
     public void removeLast() {
         lock.lock();
         try {
-            if (caches.size() >= 5) {
-                Iterator<String> iterator = caches.keySet().iterator();
+            if (myCache.size() >= 5) {
+                Iterator<String> iterator = myCache.keySet().iterator();
                 for (int i = 0; i < 4; i++) {
                     iterator.next();
                 }
                 String fifthKey = iterator.next();
-                caches.remove(fifthKey); //
+                myCache.remove(fifthKey); //
             }
         } finally {
             lock.unlock();
         }
     }
     public Object get(String key) {
-        return caches.get(key);
+        return myCache.get(key);
     }
 }
