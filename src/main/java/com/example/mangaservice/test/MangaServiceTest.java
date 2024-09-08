@@ -25,9 +25,9 @@ public class MangaServiceTest {
     private Cache myCache;
 
     private String name1 = "Manga 1";
-    private String name2 = "Manga 1";
-    private String Author1 = "Manga 1";
-    private String Author2 = "Manga 1";
+    private String name2 = "Manga 2";
+    private String Author1 = "Author 1";
+    private String Author2 = "Author 1";
 
     @BeforeEach
     public void setUp() {
