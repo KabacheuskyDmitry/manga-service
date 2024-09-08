@@ -40,13 +40,10 @@ public class MangaServiceTest {
     }
     @Test
     public void testFindAllMangas() {
-        String name1 = "Manga 1";
-        String name2 = "Manga 2";
-        String author1 = "Author 1";
-        String author2 = "Author 2";
-        Manga Manga1 = MangaConstructor(name1,author1,4.23,1L);
 
-        Manga Manga2 = MangaConstructor(name2,author2,4.03,2L);
+        Manga Manga1 = MangaConstructor("Manga 1","Author 1",4.23,1L);
+
+        Manga Manga2 = MangaConstructor("Manga 2","Author 2",4.03,2L);
 
         List<Manga> Mangas = Arrays.asList(Manga1, Manga2);
 
@@ -56,19 +53,17 @@ public class MangaServiceTest {
 
         assertAll("Проверка всех книг",
                 () -> assertEquals(2, result.size(), "Размер списка должен быть 2"),
-                () -> assertEquals(name1, result.get(0).getName(), "Заголовок первой манги должен быть 'Manga 1'"),
+                () -> assertEquals("Manga 1", result.get(0).getName(), "Заголовок первой манги должен быть 'Manga 1'"),
                 () -> assertEquals(4.23, result.get(0).getRating(), "Рейтинг первой манги должен быть '4,23'"),
-                () -> assertEquals(author1, result.get(0).getAuthor(), "Автор первой манги должен быть 'Author 1'"),
-                () -> assertEquals(name2, result.get(1).getName(), "Заголовок второй манги должен быть 'Manga 2'"),
+                () -> assertEquals("Author 1", result.get(0).getAuthor(), "Автор первой манги должен быть 'Author 1'"),
+                () -> assertEquals("Manga 2", result.get(1).getName(), "Заголовок второй манги должен быть 'Manga 2'"),
                 () -> assertEquals(4.03, result.get(1).getRating(), "Рейтинг второй манги должен быть '4,03'"),
-                () -> assertEquals(author2, result.get(1).getAuthor(), "Автор второй манги должен быть 'Author 2'")
+                () -> assertEquals("Author 2", result.get(1).getAuthor(), "Автор второй манги должен быть 'Author 2'")
         );
     }
     @Test
     public void testSaveManga() {
-        String name1 = "Manga 1";
-        String author1 = "author";
-        MangaDTO MangaDTO = new MangaDTO((long)0,name1, 4.23, author1);
+        MangaDTO MangaDTO = new MangaDTO((long)0,"Manga 1", 4.23, "author");
 
         MangasService.saveManga(MangaDTO);
 
@@ -100,9 +95,7 @@ public class MangaServiceTest {
     }
     @Test
     public void testConvertToDTO() {
-        String name1 = "Manga 1";
-        String author1 = "author";
-        Manga Manga = MangaConstructor(name1,author1,4.23,1L);
+        Manga Manga = MangaConstructor("Manga 1","author",4.23,1L);
 
         MangaDTO dto = MangasService.convertToDTO(Manga);
 
@@ -158,13 +151,9 @@ public class MangaServiceTest {
     }
     @Test
     void FindMangasWithHighRatingFromCache() {
-        String name1 = "Manga 1";
-        String author1 = "Author 1";
-        String name2 = "Manga 2";
-        String author2 = "Author 2";
         double minRating = 5;
-        List<MangaDTO> expectedMangas = Arrays.asList(new MangaDTO(1L, name1, 4.23, author1),
-                new MangaDTO(2L, name2, 4.03, author2));
+        List<MangaDTO> expectedMangas = Arrays.asList(new MangaDTO(1L, "Manga 1", 4.23, "Author 1"),
+                new MangaDTO(2L, "Manga 2", 4.03, "Author 2"));
         when(myCache.get(anyString())).thenReturn(expectedMangas);
         myCache.put("MangasWithHighRating_"+minRating,expectedMangas);
         List<MangaDTO> result = MangasService.findMangaByRating(minRating);
@@ -175,11 +164,7 @@ public class MangaServiceTest {
     @Test
     void testFindMangasWithHighRatingFromRepoAndCache() {
         double minRating = 5;
-        String name1 = "Manga 1";
-        String author1 = "Author 1";
-        String name2 = "Manga 2";
-        String author2 = "Author 2";
-        List<Manga> Mangas = Arrays.asList(MangaConstructor(author1, name1, 4.23, 1L),MangaConstructor(author2, name2, 4.03, 2L));
+        List<Manga> Mangas = Arrays.asList(MangaConstructor("Manga 1", "Author 1", 4.23, 1L),MangaConstructor("Manga 2", "Author 2", 4.03, 2L));
         List<MangaDTO> expectedMangas = Mangas.stream()
                 .map(Manga -> new MangaDTO(Manga.getId(), Manga.getName(), Manga.getRating(), Manga.getAuthor()))
                 .toList();
@@ -194,13 +179,9 @@ public class MangaServiceTest {
     }
     @Test// проверка что метод сэйв вызоветмя 2 раза для каждой книги
     void testSaveMangas() {
-        String name1 = "Manga 1";
-        String author1 = "Author 1";
-        String name2 = "Manga 2";
-        String author2 = "Author 2";
         List<MangaDTO> MangasDTOs = Arrays.asList(
-                new MangaDTO(1L, name1, 4.23, author1),
-                new MangaDTO(2L, name2, 4.03, author2)
+                new MangaDTO(1L, "Manga 1", 4.23, "Author 1"),
+                new MangaDTO(2L, "Manga 2", 4.03, "Author 2")
         );
         MangasService.saveMangas(MangasDTOs);
         verify(MangasRepository, times(2)).save(any(Manga.class));
