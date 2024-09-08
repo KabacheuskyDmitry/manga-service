@@ -171,7 +171,7 @@ public class MangaServiceTest {
         double minRating = 5;
         List<Manga> mangas = Arrays.asList(mangaConstructor(name1, author1, 4.23, 1L), mangaConstructor(name2, author2, 4.03, 2L));
         List<MangaDTO> expectedMangas = mangas.stream()
-                .map(Manga -> new MangaDTO(Manga.getId(), Manga.getName(), Manga.getRating(), Manga.getAuthor()))
+                .map(manga -> new MangaDTO(manga.getId(), manga.getName(), manga.getRating(), manga.getAuthor()))
                 .toList();
         when(mangasRepository.findMangaByRating(minRating)).thenReturn(mangas);
         when(myCache.get(anyString())).thenReturn(null);
