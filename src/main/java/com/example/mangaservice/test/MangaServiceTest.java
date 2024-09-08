@@ -20,15 +20,15 @@ import static org.mockito.Mockito.*;
 
 public class MangaServiceTest {
 
-    private MangaService MangasService;
-    private MangaRepository MangasRepository;
+    private MangaService mangasService;
+    private MangaRepository mangasRepository;
     private Cache myCache;
 
     @BeforeEach
     public void setUp() {
-        MangasRepository = mock(MangaRepository.class);
+        mangasRepository = mock(MangaRepository.class);
         myCache = mock(Cache.class);
-        MangasService = new MangaService(MangasRepository, myCache);
+        mangasService = new MangaService(mangasRepository, myCache);
     }
     public Manga MangaConstructor(String name, String author, double rating,long id) {
         Manga manga = new Manga();
@@ -47,9 +47,9 @@ public class MangaServiceTest {
 
         List<Manga> Mangas = Arrays.asList(Manga1, Manga2);
 
-        when(MangasRepository.findAll()).thenReturn(Mangas);
+        when(mangasRepository.findAll()).thenReturn(Mangas);
 
-        List<MangaDTO> result = MangasService.findAllManga();
+        List<MangaDTO> result = mangasService.findAllManga();
 
         assertAll("Проверка всех книг",
                 () -> assertEquals(2, result.size(), "Размер списка должен быть 2"),
@@ -65,9 +65,9 @@ public class MangaServiceTest {
     public void testSaveManga() {
         MangaDTO MangaDTO = new MangaDTO((long)0,"Manga 1", 4.23, "author");
 
-        MangasService.saveManga(MangaDTO);
+        mangasService.saveManga(MangaDTO);
 
-        verify(MangasRepository, times(1)).save(any(Manga.class));
+        verify(mangasRepository, times(1)).save(any(Manga.class));
     }
 
     @Test
@@ -83,21 +83,21 @@ public class MangaServiceTest {
         expectedManga.setRating(rating);
         expectedManga.setId(id);
 
-        when(MangasRepository.findById(id)).thenReturn(Optional.of(expectedManga));
+        when(mangasRepository.findById(id)).thenReturn(Optional.of(expectedManga));
 
-        MangaDTO actualDTO = MangasService.updateManga(id, name, rating, author);
+        MangaDTO actualDTO = mangasService.updateManga(id, name, rating, author);
 
         assertEquals(expectedManga.getName(), actualDTO.getName());
         assertEquals(expectedManga.getRating(), actualDTO.getRating());
         assertEquals(expectedManga.getAuthor(), actualDTO.getAuthor());
 
-        verify(MangasRepository, times(1)).save(expectedManga);
+        verify(mangasRepository, times(1)).save(expectedManga);
     }
     @Test
     public void testConvertToDTO() {
         Manga Manga = MangaConstructor("Manga 1","author",4.23,1L);
 
-        MangaDTO dto = MangasService.convertToDTO(Manga);
+        MangaDTO dto = mangasService.convertToDTO(Manga);
 
         assertEquals(Manga.getId(), dto.getId());
         assertEquals(Manga.getName(), dto.getName());
@@ -108,23 +108,23 @@ public class MangaServiceTest {
     public void testDeleteMangaExists() {
         Long id = 1L;
 
-        when(MangasRepository.existsById(id)).thenReturn(true);
+        when(mangasRepository.existsById(id)).thenReturn(true);
 
-        assertDoesNotThrow(() -> MangasService.deleteManga(id));
+        assertDoesNotThrow(() -> mangasService.deleteManga(id));
 
-        verify(MangasRepository, times(1)).deleteById(id);
+        verify(mangasRepository, times(1)).deleteById(id);
     }
 
     @Test
     public void testDeleteMangaNotExists() {
         Long id = 1L;
 
-        when(MangasRepository.existsById(id)).thenReturn(false);
+        when(mangasRepository.existsById(id)).thenReturn(false);
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> MangasService.deleteManga(id));
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> mangasService.deleteManga(id));
         assertEquals("Книга с ID: [" + id + "] не найдена", exception.getMessage());
 
-        verify(MangasRepository, never()).deleteById(id);
+        verify(mangasRepository, never()).deleteById(id);
     }
     @Test
     public void FindMangasWithHighRatingCachedMangasExist() {
@@ -135,19 +135,19 @@ public class MangaServiceTest {
 
         when(myCache.get(cacheKey)).thenReturn(cachedMangas);
 
-        List<MangaDTO> result = MangasService.findMangaByRating(minRating);
+        List<MangaDTO> result = mangasService.findMangaByRating(minRating);
 
         assertEquals(cachedMangas, result);
         verify(myCache, times(1)).get(cacheKey);
-        verify(MangasRepository, never()).findMangaByRating(minRating);
+        verify(mangasRepository, never()).findMangaByRating(minRating);
     }
 
     @Test
     void testFindMangasWithHighRatingEmptyList() {
         double minRating = 5;
-        when(MangasRepository.findMangaByRating(minRating)).thenReturn(Collections.emptyList());
+        when(mangasRepository.findMangaByRating(minRating)).thenReturn(Collections.emptyList());
 
-        assertThrows(ListIsEmpty.class, () -> MangasService.findMangaByRating(minRating));
+        assertThrows(ListIsEmpty.class, () -> mangasService.findMangaByRating(minRating));
     }
     @Test
     void FindMangasWithHighRatingFromCache() {
@@ -156,7 +156,7 @@ public class MangaServiceTest {
                 new MangaDTO(2L, "Manga 2", 4.03, "Author 2"));
         when(myCache.get(anyString())).thenReturn(expectedMangas);
         myCache.put("MangasWithHighRating_"+minRating,expectedMangas);
-        List<MangaDTO> result = MangasService.findMangaByRating(minRating);
+        List<MangaDTO> result = mangasService.findMangaByRating(minRating);
 
         verify(myCache, times(1)).get(anyString());
         assertEquals(expectedMangas, result);
@@ -168,13 +168,13 @@ public class MangaServiceTest {
         List<MangaDTO> expectedMangas = Mangas.stream()
                 .map(Manga -> new MangaDTO(Manga.getId(), Manga.getName(), Manga.getRating(), Manga.getAuthor()))
                 .toList();
-        when(MangasRepository.findMangaByRating(minRating)).thenReturn(Mangas);
+        when(mangasRepository.findMangaByRating(minRating)).thenReturn(Mangas);
         when(myCache.get(anyString())).thenReturn(null);
 
-        List<MangaDTO> result = MangasService.findMangaByRating(minRating);
+        List<MangaDTO> result = mangasService.findMangaByRating(minRating);
 
         verify(myCache, times(1)).put(anyString(), anyList());
-        verify(MangasRepository, times(1)).findMangaByRating(minRating);
+        verify(mangasRepository, times(1)).findMangaByRating(minRating);
         assertEquals(expectedMangas, result);
     }
     @Test// проверка что метод сэйв вызоветмя 2 раза для каждой книги
@@ -183,8 +183,8 @@ public class MangaServiceTest {
                 new MangaDTO(1L, "Manga 1", 4.23, "Author 1"),
                 new MangaDTO(2L, "Manga 2", 4.03, "Author 2")
         );
-        MangasService.saveMangas(MangasDTOs);
-        verify(MangasRepository, times(2)).save(any(Manga.class));
+        mangasService.saveMangas(MangasDTOs);
+        verify(mangasRepository, times(2)).save(any(Manga.class));
     }
 
 }
