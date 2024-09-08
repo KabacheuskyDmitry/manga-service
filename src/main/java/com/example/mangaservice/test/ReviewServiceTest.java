@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 class ReviewServiceTest {
 
     @Mock
-    private MangaRepository MangaRepository;
+    private MangaRepository mangaRepository;
 
     @Mock
     private ReviewRepository reviewsRepository;
@@ -32,28 +32,28 @@ class ReviewServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-    public Manga MangaConstructor(String title, String author, Double rating,long id) {
-        Manga Manga = new Manga();
-        Manga.setName(title);
-        Manga.setAuthor(author);
-        Manga.setId(id);
-        Manga.setRating(rating);
-        Manga.setReviews(new ArrayList<>());
-        return Manga;
+    public Manga mangaConstructor(String title, String author, Double rating, long id) {
+        Manga manga = new Manga();
+        manga.setName(title);
+        manga.setAuthor(author);
+        manga.setId(id);
+        manga.setRating(rating);
+        manga.setReviews(new ArrayList<>());
+        return manga;
     }
-    public Review reviewConstructor(Manga Manga,String content,long id)
+    public Review reviewConstructor(Manga manga,String content,long id)
     {
         Review review = new Review();
         review.setContent(content);
         review.setId(id);
-        review.setManga(Manga);
+        review.setManga(manga);
         return  review;
     }
 
     @Test
     void testGetReviewsNotFound() {
         String title = "Nonexistent Title";
-        when(MangaRepository.findAll()).thenReturn(Collections.emptyList());
+        when(mangaRepository.findAll()).thenReturn(Collections.emptyList());
         assertThrows(ListIsEmpty.class, () -> reviewService.getReviews(title));
     }
     @Test
@@ -62,22 +62,21 @@ class ReviewServiceTest {
         String name = "Test Name";
         String content = "Great Manga!";
         long mangaId = 123456789L; // Предполагаемый ID книги
-        long reviewId = 987654321L; // Предполагаемый ID отзыва
-        Manga Manga = MangaConstructor(name, "Name", 4.23, mangaId);
+        Manga manga = mangaConstructor(name, "Name", 4.23, mangaId);
         // Нас тройка поведения моков
-        when(MangaRepository.findByName(name)).thenReturn(Manga);
+        when(mangaRepository.findByName(name)).thenReturn(manga);
 
-        MangaRepository.save(Manga);
+        mangaRepository.save(manga);
         reviewService.saveReview(name, content);
 
         // Проверка
-        verify(MangaRepository, times(1)).findByName(name);
+        verify(mangaRepository, times(1)).findByName(name);
         verify(reviewsRepository, times(1)).save(any(Review.class));
         assertTrue(reviewService.getReviews(name).stream().anyMatch(review -> review.getContent().equals(content)));
     }
 
     @Test
-    void testUpdateReviewContent_ExistingReview() {
+    void testUpdateReviewContentExistingReview() {
         // Подготовка
         Long existingReviewId = 1L;
         String newContent = "Updated Content";
@@ -101,7 +100,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    void testUpdateReviewContent_NonExistingReview() {
+    void testUpdateReviewContentNonExistingReview() {
         // Подготовка
         Long nonExistingReviewId = 999L;
 
