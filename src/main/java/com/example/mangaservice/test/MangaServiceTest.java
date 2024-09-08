@@ -68,9 +68,9 @@ public class MangaServiceTest {
     }
     @Test
     public void testSaveManga() {
-        MangaDTO MangaDTO = new MangaDTO((long)0,name1, 4.23, author1);
+        MangaDTO mangaDTO = new MangaDTO((long)0,name1, 4.23, author1);
 
-        mangasService.saveManga(MangaDTO);
+        mangasService.saveManga(mangaDTO);
 
         verify(mangasRepository, times(1)).save(any(Manga.class));
     }
@@ -100,14 +100,14 @@ public class MangaServiceTest {
     }
     @Test
     public void testConvertToDTO() {
-        Manga Manga = mangaConstructor(name1,"author",4.23,1L);
+        Manga manga = mangaConstructor(name1,"author",4.23,1L);
 
-        MangaDTO dto = mangasService.convertToDTO(Manga);
+        MangaDTO dto = mangasService.convertToDTO(manga);
 
-        assertEquals(Manga.getId(), dto.getId());
-        assertEquals(Manga.getName(), dto.getName());
-        assertEquals(Manga.getRating(), dto.getRating());
-        assertEquals(Manga.getAuthor(), dto.getAuthor());
+        assertEquals(manga.getId(), dto.getId());
+        assertEquals(manga.getName(), dto.getName());
+        assertEquals(manga.getRating(), dto.getRating());
+        assertEquals(manga.getAuthor(), dto.getAuthor());
     }
     @Test
     public void testDeleteMangaExists() {
@@ -155,7 +155,7 @@ public class MangaServiceTest {
         assertThrows(ListIsEmpty.class, () -> mangasService.findMangaByRating(minRating));
     }
     @Test
-    void FindMangasWithHighRatingFromCache() {
+    void findMangasWithHighRatingFromCache() {
         double minRating = 5;
         List<MangaDTO> expectedMangas = Arrays.asList(new MangaDTO(1L, name1, 4.23, author1),
                 new MangaDTO(2L, name2, 4.03, author2));
@@ -169,11 +169,11 @@ public class MangaServiceTest {
     @Test
     void testFindMangasWithHighRatingFromRepoAndCache() {
         double minRating = 5;
-        List<Manga> Mangas = Arrays.asList(mangaConstructor(name1, author1, 4.23, 1L), mangaConstructor(name2, author2, 4.03, 2L));
-        List<MangaDTO> expectedMangas = Mangas.stream()
+        List<Manga> mangas = Arrays.asList(mangaConstructor(name1, author1, 4.23, 1L), mangaConstructor(name2, author2, 4.03, 2L));
+        List<MangaDTO> expectedMangas = mangas.stream()
                 .map(Manga -> new MangaDTO(Manga.getId(), Manga.getName(), Manga.getRating(), Manga.getAuthor()))
                 .toList();
-        when(mangasRepository.findMangaByRating(minRating)).thenReturn(Mangas);
+        when(mangasRepository.findMangaByRating(minRating)).thenReturn(mangas);
         when(myCache.get(anyString())).thenReturn(null);
 
         List<MangaDTO> result = mangasService.findMangaByRating(minRating);
