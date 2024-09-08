@@ -68,9 +68,9 @@ public class MangaServiceTest {
     }
     @Test
     public void testSaveManga() {
-        MangaDTO mangaDTO = new MangaDTO((long)0,name1, 4.23, author1);
+        MangaDTO mangadto = new MangaDTO((long)0,name1, 4.23, author1);
 
-        mangasService.saveManga(mangaDTO);
+        mangasService.saveManga(mangadto);
 
         verify(mangasRepository, times(1)).save(any(Manga.class));
     }
@@ -132,7 +132,7 @@ public class MangaServiceTest {
         verify(mangasRepository, never()).deleteById(id);
     }
     @Test
-    public void FindMangasWithHighRatingCachedMangasExist() {
+    public void findMangasWithHighRatingCachedMangasExist() {
         double minRating = 4;
 
         String cacheKey = "MangasWithHighRating_" + minRating;
@@ -184,11 +184,11 @@ public class MangaServiceTest {
     }
     @Test// проверка что метод сэйв вызоветмя 2 раза для каждой книги
     void testSaveMangas() {
-        List<MangaDTO> MangasDTOs = Arrays.asList(
+        List<MangaDTO> mangas = Arrays.asList(
                 new MangaDTO(1L, name1, 4.23, author1),
                 new MangaDTO(2L, name2, 4.03, author2)
         );
-        mangasService.saveMangas(MangasDTOs);
+        mangasService.saveMangas(mangas);
         verify(mangasRepository, times(2)).save(any(Manga.class));
     }
 
