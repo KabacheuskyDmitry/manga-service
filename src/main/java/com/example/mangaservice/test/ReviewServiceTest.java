@@ -63,7 +63,6 @@ class ReviewServiceTest {
         String content = "Great Manga!";
         long mangaId = 123456789L; // Предполагаемый ID книги
         Manga manga = mangaConstructor(name, "Name", 4.23, mangaId);
-        // Нас тройка поведения моков
         when(mangaRepository.findByName(name)).thenReturn(manga);
 
         mangaRepository.save(manga);
@@ -77,34 +76,27 @@ class ReviewServiceTest {
 
     @Test
     void testUpdateReviewContentExistingReview() {
-        // Подготовка
         Long existingReviewId = 1L;
         String newContent = "Updated Content";
         Review existingReview = new Review();
         existingReview.setId(existingReviewId);
         existingReview.setContent("Initial Content");
 
-        // Настройка мока для симуляции существующего отзыва
         when(reviewsRepository.findById(existingReviewId)).thenReturn(Optional.of(existingReview));
 
-        // Выполнение
         reviewService.updateReviewContent(existingReviewId, newContent);
 
-        // Проверка
         verify(reviewsRepository, times(1)).findById(existingReviewId);
         verify(reviewsRepository, times(1)).save(any(Review.class));
 
-        // Проверка, что содержание отзыва было обновлено
         Review updatedReview = reviewsRepository.findById(existingReviewId).get();
         assertEquals(newContent, updatedReview.getContent());
     }
 
     @Test
     void testUpdateReviewContentNonExistingReview() {
-        // Подготовка
         Long nonExistingReviewId = 999L;
 
-        // Ожидаемое исключение
         assertThrows(IllegalArgumentException.class, () -> {
             reviewService.updateReviewContent(nonExistingReviewId, "New Content");
         });
