@@ -27,6 +27,11 @@ public class MangaController {
         requestCounter.incrementAndGet();
         return mangaService.getManga(name);
     }
+    @GetMapping("/books/GetAll")
+    public List<MangaDTO> getMangas() {
+        requestCounter.incrementAndGet();
+        return mangaService.findAllManga();
+    }
     @GetMapping("/manga/height-rating")
     @Operation(summary = "find manga with height rating", description = "Shows mangas with rating higher then minRating")
     public List<MangaDTO> getMangaWithHeightRating(@RequestParam Double minRating)
