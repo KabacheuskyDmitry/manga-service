@@ -1,0 +1,14 @@
+.review-textarea {
+    width: 100%; /* Задает ширину в 100% от родительского элемента */
+    max-width: 500px; /* Максимальная ширина 600px */
+    height: 100px; /* Фиксированная высота */
+    resize: none; /* Запрещает изменение размера */
+    padding: 8px; /* Отступы внутри текстового поля */
+    border: 1px solid #ccc; /* Рамка */
+    border-radius: 4px; /* Закругленные углы */
+    font-size: 16px; /* Размер шрифта */
+}
+label {
+    margin-bottom: 8px; /* Отступ снизу для label */
+    display: block; /* Делает label блочным элементом */
+}
